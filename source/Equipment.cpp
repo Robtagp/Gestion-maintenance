@@ -3,20 +3,23 @@
 #include <iostream>
 #include <limits>
 
+// --- Constructors ---
 
-
+// Constructs an equipment with given info and found status
 Equipment::Equipment(const std::vector<std::string>& Gear_Infos, const bool& is_Found)
-    :m_Gear_infos(Gear_Infos),
-     m_is_Found(is_Found)
+    : m_Gear_infos(Gear_Infos),
+      m_is_Found(is_Found)
 {
-
 }
 
+// Default constructor
 Equipment::Equipment()
 {
-
 }
 
+// --- Equipment Representation ---
+
+// Converts equipment info to a CSV-formatted string
 std::string Equipment::To_String() const
 {
     std::string result;
@@ -29,11 +32,10 @@ std::string Equipment::To_String() const
     return result;
 }
 
-
-std::vector <std::string> Equipment::Set_New_Gear()
+// Creates a new equipment by asking user for input
+std::vector<std::string> Equipment::Set_New_Gear()
 {
-    std::vector<std::string> Ask_for = 
-    {
+    std::vector<std::string> Ask_for = {
         "Equipment ID: ",
         "Brand:        ",
         "Date:         ",
@@ -43,11 +45,11 @@ std::vector <std::string> Equipment::Set_New_Gear()
     m_Gear_infos.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << "Enter New Piece Of Gear References:" << std::endl;
-    
-    for(const auto& Ask_for : Ask_for)
+
+    for (const auto& prompt : Ask_for)
     {
-        std::cout << Ask_for;
-        std::getline(std::cin,input);
+        std::cout << prompt;
+        std::getline(std::cin, input);
         m_Gear_infos.push_back(input);
     }
     std::cout << "New Gear Registered" << std::endl;
@@ -55,8 +57,10 @@ std::vector <std::string> Equipment::Set_New_Gear()
     return m_Gear_infos;
 }
 
+// --- Equipment Identification ---
 
-bool Equipment::Find_Equipment_ID(Maintenance_Manager& my_Maintenance_Manager) 
+// Searches for an equipment ID in the manager's equipment data
+bool Equipment::Find_Equipment_ID(Maintenance_Manager& my_Maintenance_Manager)
 {
     size_t pos;
     m_is_Found = false;
@@ -65,25 +69,24 @@ bool Equipment::Find_Equipment_ID(Maintenance_Manager& my_Maintenance_Manager)
 
     Copy_mEquipment_Data = my_Maintenance_Manager.Return_m_Equipment_data();
     std::cout << "Search For Equipment ID: ";
-    std::cin >>IdRecherche;
+    std::cin >> IdRecherche;
 
-    for(int i = 0; i < Copy_mEquipment_Data.size(); ++i)                            // Boucle à travers chaque élément du vecteur myVector
+    for (int i = 0; i < Copy_mEquipment_Data.size(); ++i)
     {
-        if(Copy_mEquipment_Data[i].find(",") != std::string::npos)                  // Vérifie si la chaîne contient une virgule
+        if (Copy_mEquipment_Data[i].find(",") != std::string::npos)
         {
-            pos = Copy_mEquipment_Data[i].find(",");                                // Trouve la position de la première virgule
-            if(IdRecherche == Copy_mEquipment_Data[i].substr(0, pos))               // Compare l'ID recherché avec la partie avant la virgule
+            pos = Copy_mEquipment_Data[i].find(",");
+            if (IdRecherche == Copy_mEquipment_Data[i].substr(0, pos))
             {
-                std::cout << "Equipment Found: " << Copy_mEquipment_Data[i] << std::endl; // Affiche la ligne complète si l'ID correspond
-                m_is_Found = true;                                             // Marque que l'ID a été trouvé
+                std::cout << "Equipment Found: " << Copy_mEquipment_Data[i] << std::endl;
+                m_is_Found = true;
             }
         }
     }
 
-    if(!m_is_Found)
+    if (!m_is_Found)
     {
-    std::cout << "No Equipment Found :( " << std::endl;    
-    
+        std::cout << "No Equipment Found :( " << std::endl;
     }
     return m_is_Found;
 }
